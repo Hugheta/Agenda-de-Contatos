@@ -30,20 +30,20 @@ public class ContatoViewGUI extends JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
 
-        // Painel principal
+        
         JPanel painelPrincipal = new JPanel(new BorderLayout(10, 10));
         painelPrincipal.setBackground(new Color(240, 240, 240));
         painelPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Painel superior (formulário)
+        
         JPanel painelFormulario = criarPainelFormulario();
         painelPrincipal.add(painelFormulario, BorderLayout.NORTH);
 
-        // Painel central (tabela)
+        
         JPanel painelTabela = criarPainelTabela();
         painelPrincipal.add(painelTabela, BorderLayout.CENTER);
 
-        // Painel inferior (busca e total)
+        
         JPanel painelRodape = criarPainelRodape();
         painelPrincipal.add(painelRodape, BorderLayout.SOUTH);
 
@@ -57,12 +57,12 @@ public class ContatoViewGUI extends JFrame {
         painel.setBackground(new Color(255, 255, 255));
         painel.setBorder(BorderFactory.createTitledBorder("Adicionar/Atualizar Contato"));
 
-        // Campo Nome
+        // Nome
         painel.add(new JLabel("Nome:"));
         txtNome = new JTextField();
         painel.add(txtNome);
 
-        // Campo Email
+        // Email
         painel.add(new JLabel("Email:"));
         txtEmail = new JTextField();
         painel.add(txtEmail);
