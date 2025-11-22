@@ -9,7 +9,7 @@ public class User {
     private String email;
  
 
-    // parenteses = valores que serão passados para o construtor
+   
     public User(int id, String name, String email) {
         this.id = id;
         this.name = name;
