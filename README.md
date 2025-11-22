@@ -1,2 +1,2 @@
-# Agenda-de-Contatos
-Isso daqui é um projeto para fazer uma agenda de contato usando RepLit e Neon Consolo
+# Aqui é só o front-end (Victor Hugo Felix)
+Aqui vai ter só os codigos respectivos
