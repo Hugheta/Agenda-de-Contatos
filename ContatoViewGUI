@@ -1,0 +1,308 @@
+// Arquivo: View/ContatoViewGUI.java
+package View;
+
+import Controller.ContatoController;
+import Model.Contato;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.List;
+
+public class ContatoViewGUI extends JFrame {
+    private ContatoController controller;
+    private JTable tabelaContatos;
+    private DefaultTableModel modeloTabela;
+    private JTextField txtNome;
+    private JTextField txtEmail;
+    private JTextField txtTelefone;
+    private JTextField txtBusca;
+    private JLabel lblTotalContatos;
+
+    public ContatoViewGUI() {
+        this.controller = new ContatoController();
+        inicializarGUI();
+    }
+
+    private void inicializarGUI() {
+        setTitle("Gerenciador de Contatos");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(900, 600);
+        setLocationRelativeTo(null);
+        setResizable(true);
+
+        // Painel principal
+        JPanel painelPrincipal = new JPanel(new BorderLayout(10, 10));
+        painelPrincipal.setBackground(new Color(240, 240, 240));
+        painelPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Painel superior (formulário)
+        JPanel painelFormulario = criarPainelFormulario();
+        painelPrincipal.add(painelFormulario, BorderLayout.NORTH);
+
+        // Painel central (tabela)
+        JPanel painelTabela = criarPainelTabela();
+        painelPrincipal.add(painelTabela, BorderLayout.CENTER);
+
+        // Painel inferior (busca e total)
+        JPanel painelRodape = criarPainelRodape();
+        painelPrincipal.add(painelRodape, BorderLayout.SOUTH);
+
+        add(painelPrincipal);
+        setVisible(true);
+        carregarContatos();
+    }
+
+    private JPanel criarPainelFormulario() {
+        JPanel painel = new JPanel(new GridLayout(2, 4, 10, 10));
+        painel.setBackground(new Color(255, 255, 255));
+        painel.setBorder(BorderFactory.createTitledBorder("Adicionar/Atualizar Contato"));
+
+        // Campo Nome
+        painel.add(new JLabel("Nome:"));
+        txtNome = new JTextField();
+        painel.add(txtNome);
+
+        // Campo Email
+        painel.add(new JLabel("Email:"));
+        txtEmail = new JTextField();
+        painel.add(txtEmail);
+
+        // Campo Telefone
+        painel.add(new JLabel("Telefone:"));
+        txtTelefone = new JTextField();
+        painel.add(txtTelefone);
+
+        // Botão Adicionar
+        JButton btnAdicionar = new JButton("Adicionar");
+        btnAdicionar.setBackground(new Color(76, 175, 80));
+        btnAdicionar.setForeground(Color.WHITE);
+        btnAdicionar.setFont(new Font("Arial", Font.BOLD, 12));
+        btnAdicionar.addActionListener(e -> adicionarContato());
+        painel.add(btnAdicionar);
+
+        // Botão Limpar
+        JButton btnLimpar = new JButton("Limpar");
+        btnLimpar.setBackground(new Color(158, 158, 158));
+        btnLimpar.setForeground(Color.WHITE);
+        btnLimpar.setFont(new Font("Arial", Font.BOLD, 12));
+        btnLimpar.addActionListener(e -> limparCampos());
+        painel.add(btnLimpar);
+
+        // Botão Atualizar
+        JButton btnAtualizar = new JButton("Atualizar");
+        btnAtualizar.setBackground(new Color(33, 150, 243));
+        btnAtualizar.setForeground(Color.WHITE);
+        btnAtualizar.setFont(new Font("Arial", Font.BOLD, 12));
+        btnAtualizar.addActionListener(e -> atualizarContato());
+        painel.add(btnAtualizar);
+
+        // Botão Deletar
+        JButton btnDeletar = new JButton("Deletar");
+        btnDeletar.setBackground(new Color(244, 67, 54));
+        btnDeletar.setForeground(Color.WHITE);
+        btnDeletar.setFont(new Font("Arial", Font.BOLD, 12));
+        btnDeletar.addActionListener(e -> deletarContato());
+        painel.add(btnDeletar);
+
+        return painel;
+    }
+
+    private JPanel criarPainelTabela() {
+        JPanel painel = new JPanel(new BorderLayout());
+        painel.setBackground(Color.WHITE);
+        painel.setBorder(BorderFactory.createTitledBorder("Lista de Contatos"));
+
+        // Criar modelo da tabela
+        modeloTabela = new DefaultTableModel(
+            new String[]{"ID", "Nome", "Email", "Telefone"},
+            0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        tabelaContatos = new JTable(modeloTabela);
+        tabelaContatos.setFont(new Font("Arial", Font.PLAIN, 12));
+        tabelaContatos.setRowHeight(25);
+        tabelaContatos.getTableHeader().setBackground(new Color(63, 81, 181));
+        tabelaContatos.getTableHeader().setForeground(Color.WHITE);
+        tabelaContatos.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
+
+        // Listener para selecionar linha
+        tabelaContatos.getSelectionModel().addListSelectionListener(e -> preencherCampos());
+
+        JScrollPane scrollPane = new JScrollPane(tabelaContatos);
+        painel.add(scrollPane, BorderLayout.CENTER);
+
+        return painel;
+    }
+
+    private JPanel criarPainelRodape() {
+        JPanel painel = new JPanel(new BorderLayout(10, 10));
+        painel.setBackground(new Color(240, 240, 240));
+
+        // Painel de busca
+        JPanel painelBusca = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        painelBusca.setBackground(new Color(240, 240, 240));
+        painelBusca.add(new JLabel("Buscar por Email:"));
+        txtBusca = new JTextField(20);
+        painelBusca.add(txtBusca);
+
+        JButton btnBuscar = new JButton("Buscar");
+        btnBuscar.setBackground(new Color(255, 152, 0));
+        btnBuscar.setForeground(Color.WHITE);
+        btnBuscar.setFont(new Font("Arial", Font.BOLD, 10));
+        btnBuscar.addActionListener(e -> buscarPorEmail());
+        painelBusca.add(btnBuscar);
+
+        JButton btnRecarregar = new JButton("Recarregar");
+        btnRecarregar.setBackground(new Color(76, 175, 80));
+        btnRecarregar.setForeground(Color.WHITE);
+        btnRecarregar.setFont(new Font("Arial", Font.BOLD, 10));
+        btnRecarregar.addActionListener(e -> carregarContatos());
+        painelBusca.add(btnRecarregar);
+
+        painel.add(painelBusca, BorderLayout.WEST);
+
+        // Painel de total
+        JPanel painelTotal = new JPanel();
+        painelTotal.setBackground(new Color(240, 240, 240));
+        lblTotalContatos = new JLabel("Total de Contatos: 0");
+        lblTotalContatos.setFont(new Font("Arial", Font.BOLD, 12));
+        painelTotal.add(lblTotalContatos);
+        painel.add(painelTotal, BorderLayout.EAST);
+
+        return painel;
+    }
+
+    private void adicionarContato() {
+        String nome = txtNome.getText().trim();
+        String email = txtEmail.getText().trim();
+        String telefone = txtTelefone.getText().trim();
+
+        if (nome.isEmpty() || email.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nome e Email são obrigatórios!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        boolean sucesso = controller.adicionarContato(nome, email, telefone);
+        if (sucesso) {
+            JOptionPane.showMessageDialog(this, "Contato adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            limparCampos();
+            carregarContatos();
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao adicionar contato!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void atualizarContato() {
+        int linhaSelecionada = tabelaContatos.getSelectedRow();
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um contato na tabela!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int id = (int) modeloTabela.getValueAt(linhaSelecionada, 0);
+        String nome = txtNome.getText().trim();
+        String email = txtEmail.getText().trim();
+        String telefone = txtTelefone.getText().trim();
+
+        if (nome.isEmpty() || email.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nome e Email são obrigatórios!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        boolean sucesso = controller.atualizarContato(id, nome, email, telefone);
+        if (sucesso) {
+            JOptionPane.showMessageDialog(this, "Contato atualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            limparCampos();
+            carregarContatos();
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar contato!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void deletarContato() {
+        int linhaSelecionada = tabelaContatos.getSelectedRow();
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um contato na tabela!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int id = (int) modeloTabela.getValueAt(linhaSelecionada, 0);
+        int confirma = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja deletar?", "Confirmação", JOptionPane.YES_NO_OPTION);
+
+        if (confirma == JOptionPane.YES_OPTION) {
+            boolean sucesso = controller.deletarContato(id);
+            if (sucesso) {
+                JOptionPane.showMessageDialog(this, "Contato deletado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                limparCampos();
+                carregarContatos();
+            } else {
+                JOptionPane.showMessageDialog(this, "Erro ao deletar contato!", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void buscarPorEmail() {
+        String email = txtBusca.getText().trim();
+        if (email.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Digite um email para buscar!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Contato contato = controller.buscarContatoPorEmail(email);
+        modeloTabela.setRowCount(0);
+
+        if (contato != null) {
+            adicionarLinhaTabela(contato);
+            lblTotalContatos.setText("Total de Contatos: 1");
+        } else {
+            JOptionPane.showMessageDialog(this, "Contato não encontrado!", "Informação", JOptionPane.INFORMATION_MESSAGE);
+            lblTotalContatos.setText("Total de Contatos: 0");
+        }
+    }
+
+    private void preencherCampos() {
+        int linhaSelecionada = tabelaContatos.getSelectedRow();
+        if (linhaSelecionada != -1) {
+            txtNome.setText((String) modeloTabela.getValueAt(linhaSelecionada, 1));
+            txtEmail.setText((String) modeloTabela.getValueAt(linhaSelecionada, 2));
+            txtTelefone.setText((String) modeloTabela.getValueAt(linhaSelecionada, 3));
+        }
+    }
+
+    private void limparCampos() {
+        txtNome.setText("");
+        txtEmail.setText("");
+        txtTelefone.setText("");
+        txtBusca.setText("");
+        tabelaContatos.clearSelection();
+    }
+
+    private void carregarContatos() {
+        modeloTabela.setRowCount(0);
+        List<Contato> contatos = controller.listarContatos();
+
+        for (Contato c : contatos) {
+            adicionarLinhaTabela(c);
+        }
+
+        lblTotalContatos.setText("Total de Contatos: " + contatos.size());
+    }
+
+    private void adicionarLinhaTabela(Contato c) {
+        modeloTabela.addRow(new Object[]{
+            c.getId(),
+            c.getNome(),
+            c.getEmail(),
+            c.getTelefone() != null ? c.getTelefone() : "-"
+        });
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new ContatoViewGUI());
+    }
+}
