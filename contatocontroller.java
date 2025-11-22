@@ -84,7 +84,7 @@ public class ContatoController {
         }
     }
 
-    // DELETE - Deletar contato
+   
     public boolean deletarContato(int id) {
         Contato contatoExistente = Contato.buscarPorId(id);
 
