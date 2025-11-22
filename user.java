@@ -34,7 +34,7 @@ public class User {
     public void setEmail(String email) 
     { this.email = email; }
 
-    // Sobrescrevendo toString para exibir dados do usuário
+   
     @Override
     public String toString() {
         return "ID: " + id + ", Nome: " + name + ", Email: " + email;
