@@ -17,7 +17,7 @@ public class User {
     
     }
 
-    // Getters e setters
+  
     public int getId() 
     { return id; }
     public void setId(int id)
