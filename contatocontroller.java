@@ -108,7 +108,7 @@ public class ContatoController {
                email != null && !email.trim().isEmpty();
     }
 
-    // Exibir informacoes de um contato
+    
     public void exibirContato(Contato contato) {
         if (contato != null) {
             System.out.println("\n--- Detalhes do Contato ---");
