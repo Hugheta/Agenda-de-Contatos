@@ -102,7 +102,7 @@ public class ContatoController {
         return sucesso;
     }
 
-    // Validar campos obrigatorios
+   
     private boolean validarCampos(String nome, String email) {
         return nome != null && !nome.trim().isEmpty() &&
                email != null && !email.trim().isEmpty();
