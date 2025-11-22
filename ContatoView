@@ -71,7 +71,7 @@ public class ContatoView {
         }
     }
 
-    // Adicionar contato
+    
     private void adicionarContatoView() {
         limparTela();
         exibirCabecalho();
@@ -100,7 +100,7 @@ public class ContatoView {
         }
     }
 
-    // Listar contatos
+    
     private void listarContatosView() {
         limparTela();
         exibirCabecalho();
@@ -122,7 +122,7 @@ public class ContatoView {
         }
     }
 
-    // Buscar por ID
+    
     private void buscarPorIdView() {
         limparTela();
         exibirCabecalho();
@@ -145,7 +145,7 @@ public class ContatoView {
         }
     }
 
-    // Buscar por Email
+   
     private void buscarPorEmailView() {
         limparTela();
         exibirCabecalho();
@@ -165,7 +165,7 @@ public class ContatoView {
         }
     }
 
-    // Atualizar contato
+    
     private void atualizarContatoView() {
         limparTela();
         exibirCabecalho();
@@ -200,7 +200,7 @@ public class ContatoView {
         }
     }
 
-    // Deletar contato
+    
     private void deletarContatoView() {
         limparTela();
         exibirCabecalho();
