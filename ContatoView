@@ -1,0 +1,255 @@
+// Arquivo: View/ContatoView.java
+package View;
+
+import java.util.List;
+import java.util.Scanner;
+import Controller.ContatoController;
+import Model.Contato;
+
+public class ContatoView {
+    private ContatoController controller;
+    private Scanner scanner;
+
+    public ContatoView(ContatoController controller) {
+        this.controller = controller;
+        this.scanner = new Scanner(System.in);
+    }
+
+    // Menu principal
+    public void exibirMenuPrincipal() {
+        boolean continuar = true;
+
+        while (continuar) {
+            limparTela();
+            exibirCabecalho();
+
+            System.out.println("\n========== MENU PRINCIPAL ==========");
+            System.out.println("1 - Adicionar Contato");
+            System.out.println("2 - Listar Todos os Contatos");
+            System.out.println("3 - Buscar Contato por ID");
+            System.out.println("4 - Buscar Contato por Email");
+            System.out.println("5 - Atualizar Contato");
+            System.out.println("6 - Deletar Contato");
+            System.out.println("0 - Sair");
+            System.out.println("====================================");
+            System.out.print("\nEscolha uma opcao: ");
+
+            try {
+                int opcao = Integer.parseInt(scanner.nextLine());
+
+                switch (opcao) {
+                    case 1:
+                        adicionarContatoView();
+                        break;
+                    case 2:
+                        listarContatosView();
+                        break;
+                    case 3:
+                        buscarPorIdView();
+                        break;
+                    case 4:
+                        buscarPorEmailView();
+                        break;
+                    case 5:
+                        atualizarContatoView();
+                        break;
+                    case 6:
+                        deletarContatoView();
+                        break;
+                    case 0:
+                        continuar = false;
+                        System.out.println("\nEncerrando aplicacao... Ate logo!");
+                        break;
+                    default:
+                        System.out.println("Opcao invalida! Tente novamente.");
+                        pausa();
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada invalida! Digite um numero.");
+                pausa();
+            }
+        }
+    }
+
+    
+    private void adicionarContatoView() {
+        limparTela();
+        exibirCabecalho();
+        System.out.println("\n========== ADICIONAR CONTATO ==========\n");
+
+        try {
+            System.out.print("Nome: ");
+            String nome = scanner.nextLine();
+
+            System.out.print("Email: ");
+            String email = scanner.nextLine();
+
+            System.out.print("Telefone (opcional): ");
+            String telefone = scanner.nextLine();
+
+            boolean sucesso = controller.adicionarContato(nome, email, telefone);
+
+            if (sucesso) {
+                System.out.println("\nContato adicionado com sucesso!");
+            }
+
+            pausa();
+        } catch (Exception e) {
+            System.out.println("Erro ao adicionar contato: " + e.getMessage());
+            pausa();
+        }
+    }
+
+    
+    private void listarContatosView() {
+        limparTela();
+        exibirCabecalho();
+        System.out.println("\n========== LISTA DE CONTATOS ==========\n");
+
+        try {
+            List<Contato> contatos = controller.listarContatos();
+
+            if (contatos.isEmpty()) {
+                System.out.println("Nenhum contato cadastrado!");
+            } else {
+                controller.exibirListaContatos(contatos);
+            }
+
+            pausa();
+        } catch (Exception e) {
+            System.out.println("Erro ao listar contatos: " + e.getMessage());
+            pausa();
+        }
+    }
+
+    
+    private void buscarPorIdView() {
+        limparTela();
+        exibirCabecalho();
+        System.out.println("\n========== BUSCAR POR ID ==========\n");
+
+        try {
+            System.out.print("Digite o ID do contato: ");
+            int id = Integer.parseInt(scanner.nextLine());
+
+            Contato contato = controller.buscarContatoPorId(id);
+            controller.exibirContato(contato);
+
+            pausa();
+        } catch (NumberFormatException e) {
+            System.out.println("ID invalido! Digite um numero.");
+            pausa();
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar contato: " + e.getMessage());
+            pausa();
+        }
+    }
+
+   
+    private void buscarPorEmailView() {
+        limparTela();
+        exibirCabecalho();
+        System.out.println("\n========== BUSCAR POR EMAIL ==========\n");
+
+        try {
+            System.out.print("Digite o email do contato: ");
+            String email = scanner.nextLine();
+
+            Contato contato = controller.buscarContatoPorEmail(email);
+            controller.exibirContato(contato);
+
+            pausa();
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar contato: " + e.getMessage());
+            pausa();
+        }
+    }
+
+    
+    private void atualizarContatoView() {
+        limparTela();
+        exibirCabecalho();
+        System.out.println("\n========== ATUALIZAR CONTATO ==========\n");
+
+        try {
+            System.out.print("Digite o ID do contato: ");
+            int id = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Novo nome: ");
+            String nome = scanner.nextLine();
+
+            System.out.print("Novo email: ");
+            String email = scanner.nextLine();
+
+            System.out.print("Novo telefone (opcional): ");
+            String telefone = scanner.nextLine();
+
+            boolean sucesso = controller.atualizarContato(id, nome, email, telefone);
+
+            if (sucesso) {
+                System.out.println("\nContato atualizado com sucesso!");
+            }
+
+            pausa();
+        } catch (NumberFormatException e) {
+            System.out.println("ID invalido! Digite um numero.");
+            pausa();
+        } catch (Exception e) {
+            System.out.println("Erro ao atualizar contato: " + e.getMessage());
+            pausa();
+        }
+    }
+
+    
+    private void deletarContatoView() {
+        limparTela();
+        exibirCabecalho();
+        System.out.println("\n========== DELETAR CONTATO ==========\n");
+
+        try {
+            System.out.print("Digite o ID do contato a deletar: ");
+            int id = Integer.parseInt(scanner.nextLine());
+
+            System.out.print("Tem certeza que deseja deletar? (S/N): ");
+            String confirmacao = scanner.nextLine().toUpperCase();
+
+            if (confirmacao.equals("S")) {
+                boolean sucesso = controller.deletarContato(id);
+
+                if (sucesso) {
+                    System.out.println("\nContato deletado com sucesso!");
+                }
+            } else {
+                System.out.println("\nOperacao cancelada!");
+            }
+
+            pausa();
+        } catch (NumberFormatException e) {
+            System.out.println("ID invalido! Digite um numero.");
+            pausa();
+        } catch (Exception e) {
+            System.out.println("Erro ao deletar contato: " + e.getMessage());
+            pausa();
+        }
+    }
+
+    // Exibir cabecalho
+    private void exibirCabecalho() {
+        System.out.println("\n====================================");
+        System.out.println("   GERENCIADOR DE CONTATOS");
+        System.out.println("====================================");
+    }
+
+    // Limpar tela
+    private void limparTela() {
+        for (int i = 0; i < 50; i++) {
+            System.out.println();
+        }
+    }
+
+    // Pausa para o usuario ler a mensagem
+    private void pausa() {
+        System.out.print("\n[Pressione ENTER para continuar...]");
+        scanner.nextLine();
+    }
+}
