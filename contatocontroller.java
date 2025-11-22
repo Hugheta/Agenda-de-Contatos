@@ -48,7 +48,7 @@ public class ContatoController {
         return contato;
     }
 
-    // READ - Buscar contato por email
+    
     public Contato buscarContatoPorEmail(String email) {
         Contato contato = Contato.buscarPorEmail(email);
 
