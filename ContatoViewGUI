@@ -67,7 +67,7 @@ public class ContatoViewGUI extends JFrame {
         txtEmail = new JTextField();
         painel.add(txtEmail);
 
-        // Campo Telefone
+        // Telefone
         painel.add(new JLabel("Telefone:"));
         txtTelefone = new JTextField();
         painel.add(txtTelefone);
@@ -130,7 +130,7 @@ public class ContatoViewGUI extends JFrame {
         tabelaContatos.getTableHeader().setForeground(Color.WHITE);
         tabelaContatos.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
 
-        // Listener para selecionar linha
+        
         tabelaContatos.getSelectionModel().addListSelectionListener(e -> preencherCampos());
 
         JScrollPane scrollPane = new JScrollPane(tabelaContatos);
@@ -143,7 +143,7 @@ public class ContatoViewGUI extends JFrame {
         JPanel painel = new JPanel(new BorderLayout(10, 10));
         painel.setBackground(new Color(240, 240, 240));
 
-        // Painel de busca
+        
         JPanel painelBusca = new JPanel(new FlowLayout(FlowLayout.LEFT));
         painelBusca.setBackground(new Color(240, 240, 240));
         painelBusca.add(new JLabel("Buscar por Email:"));
@@ -166,7 +166,7 @@ public class ContatoViewGUI extends JFrame {
 
         painel.add(painelBusca, BorderLayout.WEST);
 
-        // Painel de total
+        
         JPanel painelTotal = new JPanel();
         painelTotal.setBackground(new Color(240, 240, 240));
         lblTotalContatos = new JLabel("Total de Contatos: 0");
