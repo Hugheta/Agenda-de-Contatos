@@ -122,7 +122,7 @@ public class ContatoController {
         }
     }
 
-    // Exibir lista de contatos
+    
     public void exibirListaContatos(List<Contato> contatos) {
         if (contatos.isEmpty()) {
             System.out.println("Nenhum contato para exibir!");
