@@ -1,2 +1,3 @@
-# Aqui é só o front-end (Victor Hugo Felix)
-Aqui vai ter só os codigos respectivos
+# model e main
+aqui vai ficar os codigos do model e da main
+
